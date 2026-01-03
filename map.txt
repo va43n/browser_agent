@@ -1,0 +1,23 @@
+build
+|--<...>
+src
+|--venv
+|--|--<...>
+|--|--<...>
+|--ai
+|--|--agent.py
+|--|--messages.py
+|--browser
+|--|--browser
+|--|--messages.py
+|--enviroment
+|--|--env_handler.py
+|--ui ?
+|--|--some_ui_framework.py ?
+|--|--voice_handler.py ?
+|--.env
+|--requirements.txt
+|--.gitignore
+|--main.py
+map.txt
+task.txt ?
