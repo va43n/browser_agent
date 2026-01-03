@@ -1,23 +1,26 @@
-build
-|--<...>
-src
-|--venv
-|--|--<...>
-|--|--<...>
-|--ai
-|--|--agent.py
-|--|--messages.py
-|--browser
-|--|--browser
-|--|--messages.py
-|--enviroment
-|--|--env_handler.py
-|--ui ?
-|--|--some_ui_framework.py ?
-|--|--voice_handler.py ?
-|--.env
-|--requirements.txt
-|--.gitignore
-|--main.py
-map.txt
-task.txt ?
+browser_agent
+├──build
+│  └──<...>
+├──src
+│  ├──ai
+│  │  ├──agent.py
+│  │  └──messages.py
+│  ├──browser
+│  │  └──browser_handler.py
+│  ├──enviroment
+│  │  └──env_handler.py
+│  ├──ui
+│  │  ├──terminal_ui.py
+│  │  ├──some_ui_framework.py ?
+│  │  └──voice_handler.py ?
+│  ├──venv
+│  │  ├──<...>
+│  │  └──<...>
+│  ├──.env
+│  ├──requirements.txt
+│  ├──main.py
+│  └──test.py # Delete this
+├──.gitignore
+├──map.txt
+├──README.md
+└──task.txt ?
