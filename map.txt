@@ -3,10 +3,11 @@ browser_agent
 │  └──<...>
 ├──src
 │  ├──ai
+│  │  ├──browser_tasks
+│  │  │  ├──browser_handler.py
+│  │  │  └──browser.py
 │  │  ├──agent.py
 │  │  └──messages.py
-│  ├──browser
-│  │  └──browser_handler.py
 │  ├──enviroment
 │  │  └──env_handler.py
 │  ├──ui

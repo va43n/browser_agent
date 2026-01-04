@@ -1,5 +1,6 @@
-from enviroment.env_handler import EnviromentHandler
+from ai.agent import Agent
 from ui.terminal_ui import TerimnalUI
+from enviroment.env_handler import EnviromentHandler
 
 class Controller:
     def __init__(self):
@@ -10,7 +11,10 @@ class Controller:
         if not is_available:
             api_key_user_input = self.t_ui.handle_not_available_api_key()
             self.env.set_api_key_from_ui(api_key_user_input)
+        is_available, key = self.env.get_api_key()
         
+        self.a = Agent(key)
+
         self.t_ui.ready_to_start()
         self.handle_prompts()
 
@@ -20,8 +24,10 @@ class Controller:
             user_input = self.t_ui.get_prompt_from_user()
             if user_input == "quit":
                 is_going = False
+                self.a.stop_agent()
             else:
                 print(f"Your prompt: {user_input}")
+                self.a.process_prompt(user_input)
 
 if __name__ == "__main__":
     c = Controller()
