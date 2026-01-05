@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv, set_key, find_dotenv
 
-class EnviromentHandler:
+class EnvironmentHandler:
     api_key_name = "ZAI_API_KEY"
 
     def __init__(self):

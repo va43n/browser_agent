@@ -6,21 +6,21 @@ browser_agent
 │  │  ├──browser_tasks
 │  │  │  ├──browser_handler.py
 │  │  │  └──browser.py
-│  │  ├──agent.py
-│  │  └──messages.py
-│  ├──enviroment
+│  │  ├──agent_handler.py
+│  │  ├──browser_scroller_agent.py
+│  │  ├──task_describer_agent.py
+│  │  └──agent.py
+│  ├──environment
 │  │  └──env_handler.py
 │  ├──ui
 │  │  ├──terminal_ui.py
 │  │  ├──some_ui_framework.py ?
 │  │  └──voice_handler.py ?
 │  ├──venv
-│  │  ├──<...>
 │  │  └──<...>
 │  ├──.env
 │  ├──requirements.txt
-│  ├──main.py
-│  └──test.py # Delete this
+│  └──main.py
 ├──.gitignore
 ├──map.txt
 ├──README.md

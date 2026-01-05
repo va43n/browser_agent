@@ -15,3 +15,6 @@ class TerimnalUI:
     def get_prompt_from_user(self):
         print("Введи свой запрос, и я попробую его обработать! Для завершения напиши 'quit'.")
         return input()
+
+    def show_message(self, message):
+        print(message)

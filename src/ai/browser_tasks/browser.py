@@ -12,36 +12,47 @@ class Browser:
     def start(self):
         self.playwright = sync_playwright().start()
         self.browser = self.playwright.chromium.launch(headless=False)
-        self.page = self.browser.new_page()
     
     def open_url(self, url):
-        result = ""
-        is_success = True
         try:
+            self.page = self.browser.new_page()
             self.page.goto(url, wait_until="domcontentloaded")
-            
-            html_content = self.page.content()
-            title = self.page.title()
-            url = self.page.url
 
             # self.page.screenshot(path="example_screenshot.png")
-
-            print(f"Страница загружена: {title}")
-            print(f"URL: {url}")
-            print(f"Длина HTML: {len(html_content)} символов")
-
-            result = self.clear_html_and_get_useful_elements(title, url, html_content)
-
-            # self.page.locator("[name='login']").fill("qwerty123456")
-            # self.page.type("[name='login']", "hello world", delay=50)
-            
         except Exception as e:
-            result = "error"
-            is_success = False
             print(f"Error: {e}")
+            return False
+        
+        return True
+    
+    def get_page_info(self):
+        result = ""
+        is_success = True
+
+        html_content = self.page.content()
+        title = self.page.title()
+        url = self.page.url
+
+        print(f"Страница загружена: {title}")
+        print(f"URL: {url}")
+        print(f"Длина HTML: {len(html_content)} символов")
+
+        result = self.clear_html_and_get_useful_elements(title, url, html_content)
         
         return is_success, result
-    
+
+    def perform_action(self, json_message):
+        if json_message['command']['action'] == "click":
+            self.click_on_object(json_message['command']['name'])
+        elif json_message['command']['action'] == "fill":
+            self.fill_input_field(json_message['command']['name'], json_message['command']['text'])
+
+    def click_on_object(self, object_text):
+        self.page.click(f"text={object_text}")
+
+    def fill_input_field(self, input_field_name, text):
+        self.page.locator(f"[name='{input_field_name}']").fill(f"{text}")
+
     def clear_html_and_get_useful_elements(self, title, url, html):
         html = re.sub(r'<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>', '', html, flags=re.IGNORECASE)
         html = re.sub(r'<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>', '', html, flags=re.IGNORECASE)

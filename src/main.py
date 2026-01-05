@@ -1,11 +1,11 @@
-from ai.agent import Agent
+from ai.agent_handler import AgentHandler
+from environment.env_handler import EnvironmentHandler
 from ui.terminal_ui import TerimnalUI
-from enviroment.env_handler import EnviromentHandler
 
 class Controller:
     def __init__(self):
         self.t_ui = TerimnalUI()
-        self.env = EnviromentHandler()
+        self.env = EnvironmentHandler()
         
         is_available, key = self.env.get_api_key()
         if not is_available:
@@ -13,7 +13,7 @@ class Controller:
             self.env.set_api_key_from_ui(api_key_user_input)
         is_available, key = self.env.get_api_key()
         
-        self.a = Agent(key)
+        self.agent_handler = AgentHandler(key)
 
         self.t_ui.ready_to_start()
         self.handle_prompts()
@@ -24,10 +24,10 @@ class Controller:
             user_input = self.t_ui.get_prompt_from_user()
             if user_input == "quit":
                 is_going = False
-                self.a.stop_agent()
+                self.agent_handler.stop_agents()
             else:
-                print(f"Your prompt: {user_input}")
-                self.a.process_prompt(user_input)
+                self.t_ui.show_message(f"Your prompt: {user_input}")
+                self.agent_handler.process_new_prompt(user_input)
 
 if __name__ == "__main__":
     c = Controller()
