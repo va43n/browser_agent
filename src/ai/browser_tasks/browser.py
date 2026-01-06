@@ -1,4 +1,6 @@
-import re
+import json
+
+from bs4 import BeautifulSoup
 
 from playwright.sync_api import sync_playwright
 
@@ -25,6 +27,43 @@ class Browser:
         
         return True
     
+    def perform_action(self, json_message):
+        if json_message['command']['tag'] == "button":
+            self.handle_button_action(json_message['command'])
+        elif json_message['command']['tag'] == "a":
+            self.handle_link_action(json_message['command'])
+        elif json_message['command']['tag'] == "input":
+            self.handle_input_action(json_message['command'])
+        self.page.wait_for_load_state('domcontentloaded')
+
+    def handle_button_action(self, json_command):
+        if json_command['action'] == 'click':
+            attr = json_command['attr']
+            attr_text = json_command['attr_text']
+            if attr == 'text':
+                self.page.get_by_role("button", name=attr_text).nth(0).click()
+            else:
+                self.page.locator(f'button[{attr}="{attr_text}"]').nth(0).click()
+    
+    def handle_link_action(self, json_command):
+        if json_command['action'] == 'click':
+            attr = json_command['attr']
+            attr_text = json_command['attr_text']
+            if attr == 'text':
+                self.page.get_by_role("link", name=attr_text).nth(0).click()
+            else:
+                self.page.locator(f'a[{attr}="{attr_text}"]').nth(0).click()
+
+    def handle_input_action(self, json_command):
+        if json_command['action'] == 'type':
+            attr = json_command['attr']
+            attr_text = json_command['attr_text']
+            text = json_command['text']
+            if attr == 'text':
+                self.page.get_by_role("textbox", name=attr_text).nth(0).type(text, delay=100)
+            else:
+                self.page.locator(f'input[{attr}="{attr_text}"]').nth(0).type(text, delay=100)
+
     def get_page_info(self):
         result = ""
         is_success = True
@@ -37,62 +76,39 @@ class Browser:
         print(f"URL: {url}")
         print(f"Длина HTML: {len(html_content)} символов")
 
-        result = self.clear_html_and_get_useful_elements(title, url, html_content)
+        result = self.extract_useful_elements(title, url, html_content)
         
         return is_success, result
 
-    def perform_action(self, json_message):
-        if json_message['command']['action'] == "click":
-            self.click_on_object(json_message['command']['name'])
-        elif json_message['command']['action'] == "fill":
-            self.fill_input_field(json_message['command']['name'], json_message['command']['text'])
-
-    def click_on_object(self, object_text):
-        self.page.click(f"text={object_text}")
-
-    def fill_input_field(self, input_field_name, text):
-        self.page.locator(f"[name='{input_field_name}']").fill(f"{text}")
-
-    def clear_html_and_get_useful_elements(self, title, url, html):
-        html = re.sub(r'<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>', '', html, flags=re.IGNORECASE)
-        html = re.sub(r'<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>', '', html, flags=re.IGNORECASE)
-
-        html = re.sub(r'<!--.*?-->', '', html, flags=re.DOTALL)
-
-        html = re.sub(r'\s+', ' ', html)
-        html = re.sub(r'>\s+<', '><', html)
-
-        body_match = re.search(r'<body[^>]*>(.*?)</body>', html, re.IGNORECASE | re.DOTALL)
-        if body_match:
-            html = body_match.group(1)
-
-        return self.extract_useful_elements(title, url, html)
-
     def extract_useful_elements(self, title, url, html):
-        useful_elements = f"[{url}]\n[{title}]\n"
-        
-        buttons = re.findall(r'<button[^>]*>(.*?)</button>', html, re.IGNORECASE | re.DOTALL)
-        for i, btn in enumerate(buttons[:10]):
-            btn_text = re.sub(r'<[^>]+>', '', btn).strip()[:50]
-            if btn_text:
-                useful_elements += f"<button> {i + 1} [{btn_text}]\n"
-        
-        links = re.findall(r'<a[^>]*href=["\'][^"\']*["\'][^>]*>(.*?)</a>', html, re.IGNORECASE | re.DOTALL)
-        for i, link in enumerate(links[:10]):
-            link_text = re.sub(r'<[^>]+>', '', link).strip()[:50]
-            if link_text:
-                useful_elements += f"<a> {i + 1} [{link_text}]\n"
-        
-        inputs = re.findall(r'<input[^>]*>', html, re.IGNORECASE)
-        for i, inp in enumerate(inputs[:10]):
-            input_name = re.search(r'name=["\'][^"\']*["\']', inp)
-            input_type = re.search(r'type=["\'][^"\']*["\']', inp)
-            name = input_name.group(0)[6:-1] if input_name else f"input_{i+1}"
-            type_ = input_type.group(0)[6:-1] if input_type else "text"
+        soup = BeautifulSoup(html, 'html.parser')
+
+        elements_string = f"[{url}]\n[{title}]\n"
+        i = 0
+        elements_length = 30
+
+        for elem in soup.find_all(['input', 'button', 'a']):
+            attrs = {}
+            attrs['tag'] = elem.name
+
+            elem_text = elem.get_text(strip=True)[:40]
+            if elem_text:
+                attrs['text'] = elem_text
+
+            for attr in ['name', 'id', 'placeholder', 'title', 'class', 'data-qa']:
+                value = elem.get(attr)
+                if value:
+                    attrs[attr] = value
+
+            print(attrs)
+            json_str = f"{i + 1}. " + json.dumps(attrs, ensure_ascii=False) + "\n"
+            elements_string += json_str
+            i += 1
             
-            useful_elements += f"<input> {i + 1} [{type_}] [{name}]\n"
+            if i >= elements_length:
+                break
         
-        return useful_elements
+        return elements_string
 
     def close(self):
         self.browser.close()

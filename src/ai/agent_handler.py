@@ -14,13 +14,16 @@ class AgentHandler:
 
         is_success, json_description, error_message = self.task_describer.describe_task(self.m.get_messages())
         if not is_success:
-            print(error_message)
+            print(error_message, json_description)
+            return False
+        if json_description['is_valid'] == "NO":
+            print("Промпт не имеет смысла")
             return False
         
-        print(json_description)
+        print(f"{json_description['description']=}")
         
-        self.m.prepare_for_getting_next_task_prompt(json_description['language'], json_description['opening_message'],
-                                                    json_description['steps'])
+        self.m.prepare_for_getting_next_task_prompt(json_description['language'], json_description['description'])
+
         self.browser_scroller.open_browser(json_description['url'])
         
         self.perform_task()
@@ -30,15 +33,23 @@ class AgentHandler:
     def perform_task(self):
         is_complete = False
         action_index = 0
-        while not is_complete and action_index < 2:
-            page_info = self.browser_scroller.get_page_info()
+        while not is_complete and action_index < 5:
+            is_success, page_info = self.browser_scroller.get_page_info()
+            if not is_success:
+                print("Не получилось получить данные браузера")
+                break
             self.m.add_new_user_message(page_info)
 
             is_success, response, error = self.browser_scroller.do_next_browser_action(self.m.get_messages())
             if not is_success:
                 print(error)
                 break
+            self.m.remove_last_message()
             self.m.add_new_assistant_message(response)
+
+            print(self.m.get_messages())
+
+            action_index += 1
 
     def stop_agents(self):
         self.task_describer.stop_agent()

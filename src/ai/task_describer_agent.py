@@ -17,11 +17,11 @@ class TaskDescriberAgent:
         choice = response.choices[0]
 
         if not choice.finish_reason == "stop":
-            return False, {}, "Не удалось уложиться в заданную длину запроса"
+            return False, choice.message.content, "Не удалось уложиться в заданную длину запроса"
 
         is_success, json_message = self.get_json_from_ai_output(choice.message.content)
         if not is_success:
-            return False, {}, "Не удалось обработать запрос агента"
+            return False, choice.message.content, "Не удалось обработать запрос агента"
 
         usage_info = response.usage
         print(f"Prompt tokens (input): {usage_info.prompt_tokens}")
@@ -45,11 +45,8 @@ class TaskDescriberAgent:
     def check_getting_url_ai_message(self, json_message):
         try:
             if not (isinstance(json_message['language'], str) and isinstance(json_message['url'], str) and
-                    isinstance(json_message['opening_message'], str) and isinstance(json_message['steps'], list)):
+                    isinstance(json_message['description'], str) and isinstance(json_message['is_valid'], str)):
                 return False
-            for step in json_message['steps']:
-                if not isinstance(step, str):
-                    return False
         except (KeyError, TypeError):
             return False
         return True

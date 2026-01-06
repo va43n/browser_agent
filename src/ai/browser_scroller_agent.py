@@ -20,11 +20,11 @@ class BrowserScrollerAgent:
         return self.browser_handler.get_page_info()
 
     def do_next_browser_action(self, messages):
-        print(f"is this empty?: {messages[1]}")
         response = self.client.chat.completions.create(
             model="glm-4.6v-flash",
             messages=messages,
-            max_tokens=2000
+            max_tokens=10000,
+            temperature=0
         )
 
         choice = response.choices[0]
@@ -41,12 +41,12 @@ class BrowserScrollerAgent:
         print(f"Completion tokens (output): {usage_info.completion_tokens}")
         print(f"Total tokens: {usage_info.total_tokens}")
 
-        print(f"Going to do action: {json_message['step']}")
+        print(f"Going to do action: {json_message['description']}, {json_message['is_done']=}")
         self.browser_handler.perform_action(json_message)
 
         return True, choice.message.content, ""
 
-    def get_json_from_ai_output(self, ai_output, type):
+    def get_json_from_ai_output(self, ai_output):
         json_message = {}
 
         try:
@@ -60,14 +60,15 @@ class BrowserScrollerAgent:
 
     def check_getting_next_task_ai_message(self, json_message):
         try:
-            if not (isinstance(json_message['step'], str) and isinstance(json_message['command'], object) and
+            if not (isinstance(json_message['description'], str) and isinstance(json_message['command'], object) and
                     isinstance(json_message['is_done'], str)):
                 return False
             if not json_message['command'] == {}:
-                if not (isinstance(json_message['command']['action'], str) and json_message['command']['action'] in ("click", "fill") and
-                        isinstance(json_message['command']['name'], str)):
+                if not (isinstance(json_message['command']['tag'], str) and json_message['command']['action'] in ("click", "type") and
+                        isinstance(json_message['command']['attr'], str) and isinstance(json_message['command']['attr_text'], str) and
+                        isinstance(json_message['command']['action'], str)):
                     return False
-                if (json_message['command']['action'] == "fill" and not isinstance(json_message['command']['text'], str)):
+                if (json_message['command']['action'] == "type" and not isinstance(json_message['command']['text'], str)):
                     return False
         except (KeyError, TypeError):
             return False
