@@ -112,5 +112,12 @@ IMPORTANT:
     def get_messages(self):
         return self.messages_list
 
+    def __str__(self):
+        str_messages = ""
+        for mes in self.messages_list:
+            str_messages += f"{mes['role']}: {mes['content']}\n"
+        
+        return str_messages
+
     def clear_messages(self):
         self.messages_list.clear()

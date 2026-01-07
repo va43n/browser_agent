@@ -47,7 +47,7 @@ class AgentHandler:
             self.m.remove_last_message()
             self.m.add_new_assistant_message(response)
 
-            print(self.m.get_messages())
+            print(self.m)
 
             action_index += 1
 
