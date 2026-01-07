@@ -1,6 +1,7 @@
-requests>=2.31.0
-playwright>=1.40.0
-python-dotenv>=1.0.0
-zai-sdk>=0.1.0
-sniffio>=1.0.0
-beautifulsoup4>=4.14.3
+beautifulsoup4==4.14.3
+playwright==1.57.0
+pyside6==6.10.1
+pyside6_addons==6.10.1
+pyside6_essentials==6.10.1
+python-dotenv==1.2.1
+zai==0.0.2

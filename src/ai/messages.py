@@ -77,9 +77,10 @@ RESPONSE TEMPLATE (strict JSON):
 
 IMPORTANT:
 - Return ONLY valid JSON, no other text.
+- If you think, that your current action will end task successfully, don't forget to put YES in is_done part of RESPONSE TEMPLATE.
 - If you think, that you can't go further through a task (for example, user doesn't authorized on a website, or you need to input some text but there is no input field, etc) you can put YES in is_done part of RESPONSE TEMPLATE, but you should write in description, what you tried to do but can't.
-- If you see, that you already tried to do something, that you want to do right now, also put YES in is_done part of RESPONSE TEMPLATE.
-    """
+- DO NOT do same action with the same HTML tag!
+"""
 
     def __init__(self):
         self.messages_list = []

@@ -40,10 +40,13 @@ class AgentHandler:
                 break
             self.m.add_new_user_message(page_info)
 
-            is_success, response, error = self.browser_scroller.do_next_browser_action(self.m.get_messages())
+            is_success, response, error, is_done = self.browser_scroller.do_next_browser_action(self.m.get_messages())
             if not is_success:
                 print(error)
                 break
+            if is_done == "YES":
+                is_complete = True
+                continue
             self.m.remove_last_message()
             self.m.add_new_assistant_message(response)
 

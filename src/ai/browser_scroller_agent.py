@@ -42,9 +42,10 @@ class BrowserScrollerAgent:
         print(f"Total tokens: {usage_info.total_tokens}")
 
         print(f"Going to do action: {json_message['description']}, {json_message['is_done']=}")
-        self.browser_handler.perform_action(json_message)
+        if json_message['is_done'] != "YES":
+            self.browser_handler.perform_action(json_message)
 
-        return True, choice.message.content, ""
+        return True, choice.message.content, "", json_message['is_done']
 
     def get_json_from_ai_output(self, ai_output):
         json_message = {}

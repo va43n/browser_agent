@@ -1,7 +1,10 @@
 import json
+import os
+import shutil
 
 from bs4 import BeautifulSoup
 
+from playwright._impl._errors import TimeoutError
 from playwright.sync_api import sync_playwright
 
 class Browser:
@@ -13,7 +16,9 @@ class Browser:
     
     def start(self):
         self.playwright = sync_playwright().start()
-        self.browser = self.playwright.chromium.launch(headless=False)
+        self.browser = self.playwright.chromium.launch_persistent_context(headless=False,
+                                                                          user_data_dir="./no_commit_custom_profile",
+                                                                          args=["--no-sandbox"])
     
     def open_url(self, url):
         try:
@@ -28,13 +33,17 @@ class Browser:
         return True
     
     def perform_action(self, json_message):
-        if json_message['command']['tag'] == "button":
-            self.handle_button_action(json_message['command'])
-        elif json_message['command']['tag'] == "a":
-            self.handle_link_action(json_message['command'])
-        elif json_message['command']['tag'] == "input":
-            self.handle_input_action(json_message['command'])
-        self.page.wait_for_load_state('domcontentloaded')
+        try:
+            if json_message['command']['tag'] == "button":
+                self.handle_button_action(json_message['command'])
+            elif json_message['command']['tag'] == "a":
+                self.handle_link_action(json_message['command'])
+            elif json_message['command']['tag'] == "input":
+                self.handle_input_action(json_message['command'])
+            self.page.wait_for_load_state('domcontentloaded')
+        except TimeoutError:
+            print("Timeout occured...")
+
 
     def handle_button_action(self, json_command):
         if json_command['action'] == 'click':
