@@ -13,8 +13,12 @@ browser_agent
 │  ├──environment
 │  │  └──env_handler.py
 │  ├──ui
-│  │  ├──terminal_ui.py
-│  │  ├──some_ui_framework.py ?
+│  │  ├──microphone.svg
+│  │  ├──pic.png
+│  │  ├──pyside6_ui.py
+│  │  ├──send.svg
+│  │  ├──styles.css
+│  │  ├──terminal_ui.py ?
 │  │  └──voice_handler.py ?
 │  ├──venv
 │  │  └──<...>

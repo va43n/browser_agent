@@ -1,0 +1,172 @@
+QMainWindow {
+    background-color: #f8f9fa;
+}
+
+QWidget#centralWidget {
+    background-color: #f8f9fa;
+    padding: 0px;
+    margin: 0px;
+}
+
+#topSection {
+    background-color: white;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+}
+
+QLabel {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+#resultOutput {
+    border-image: url('ui/pic.png') 0 0 0 0  stretch stretch;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    color: #2d3748;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    selection-background-color: #9fb4cc;
+    selection-color: white;
+}
+
+#bottomSection {
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+}
+
+#leftColumn {
+    background-color: white;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+}
+
+#buttonsVerticalContainer {
+    min-width: 62px;
+    /* border: 1px solid black; */
+}
+
+#queryInput {
+    background-color: white;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    color: #2d3748;
+    selection-background-color: #9fb4cc;
+    selection-color: white;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+
+
+    border: none;
+}
+
+#sendButton {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #48bb78, stop:1 #38a169
+    );
+    border: none;
+    border-radius: 8px;
+}
+
+#sendButton:hover {
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #38a169, stop:1 #2f855a
+    );
+}
+
+#sendButton:pressed {
+    background-color: #276749;
+}
+
+#extraButton {
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #4299e1, stop:1 #667eea
+    );
+    border: none;
+    border-radius: 8px;
+}
+
+#extraButton:hover {
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #3182ce, stop:1 #5a67d8
+    );
+}
+
+#extraButton:pressed {
+    background-color: #2c5282;
+}
+
+
+#rightColumn {
+    background-color: white;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+}
+
+
+#buttonsGridContainer {
+    padding: 12px;
+    border-radius: 10px;
+}
+
+QPushButton[id^="button"] {
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #667eea, stop:1 #764ba2
+    );
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 120px;
+    min-height: 50px;
+    margin: 4px;
+}
+
+QPushButton[id^="button"]:hover {
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #5a67d8, stop:1 #6b46c1
+    );
+    border: 2px solid #a78bfa;
+}
+
+QPushButton[id^="button"]:pressed {
+    background-color: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #4c51bf, stop:1 #553c9a
+    );
+}
+
+QScrollBar:vertical {
+    border: none;
+    background-color: #f1f5f9;
+    width: 10px;
+    border-radius: 5px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #cbd5e0;
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #a0aec0;
+}
