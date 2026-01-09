@@ -76,21 +76,21 @@ class MainWindow(QMainWindow):
         buttons_vertical_layout.setSpacing(8)
         buttons_vertical_layout.setContentsMargins(12, 12, 12, 12)
         
-        self.extra_button = QPushButton()
-        self.extra_button.setObjectName("extraButton")
-        self.extra_button.setToolTip("Secret")
-        self.extra_button.clicked.connect(self.on_extra_button_click)
-        self.extra_button.setFixedSize(40, 40)
-        self.extra_button.setIcon(QIcon("ui/microphone.svg"))
-        self.extra_button.setIconSize(QSize(24, 24))
-        
         self.send_button = QPushButton()
         self.send_button.setObjectName("sendButton")
         self.send_button.setToolTip("Send prompt")
         self.send_button.clicked.connect(self.on_send_click)
         self.send_button.setFixedSize(40, 40)
-        self.send_button.setIcon(QIcon("ui/send.svg"))
+        self.send_button.setIcon(QIcon("ui/img/send.svg"))
         self.send_button.setIconSize(QSize(24, 24))
+        
+        self.extra_button = QPushButton()
+        self.extra_button.setObjectName("extraButton")
+        self.extra_button.setToolTip("Secret")
+        self.extra_button.clicked.connect(self.on_extra_button_click)
+        self.extra_button.setFixedSize(40, 40)
+        self.extra_button.setIcon(QIcon("ui/img/microphone.svg"))
+        self.extra_button.setIconSize(QSize(24, 24))
         
         buttons_vertical_layout.addWidget(self.send_button)
         buttons_vertical_layout.addWidget(self.extra_button)
@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(top_section, 4)
         main_layout.addWidget(bottom_section, 1)
         
-        self.load_styles("styles.css")
+        self.load_styles("style/styles.css")
     
     def load_styles(self, filename):
         try:

@@ -13,13 +13,15 @@ browser_agent
 │  ├──environment
 │  │  └──env_handler.py
 │  ├──ui
+│  │  ├──img
+│  │  │  ├──background_robot.png
+│  │  │  ├──microphone.svg
+│  │  │  └──send.svg
+│  │  ├──style
+│  │  │  └──styles.css
 │  │  ├──agent_processing_thread.py
-│  │  ├──background_robot.png
 │  │  ├──gui_manager.py
-│  │  ├──microphone.svg
 │  │  ├──pyside6_ui.py
-│  │  ├──send.svg
-│  │  ├──styles.css
 │  │  └──voice_handler.py ?
 │  ├──venv
 │  │  └──<...>
