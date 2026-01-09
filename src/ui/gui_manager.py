@@ -21,3 +21,6 @@ class GUI:
     
     def add_text_to_result_output(self, text):
         self.window.add_text_to_result_output(text)
+    
+    def get_api_key_from_input_field(self):
+        return self.window.api_key_field.text()

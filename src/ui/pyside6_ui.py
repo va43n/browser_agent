@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         center_section = QWidget()
         center_section.setObjectName("centerSection")
         center_section.setMinimumHeight(62)
+        center_section.setMaximumHeight(62)
         center_layout = QHBoxLayout(center_section)
         center_layout.setContentsMargins(2, 2, 12, 2)
         center_layout.setSpacing(12)
@@ -54,20 +55,23 @@ class MainWindow(QMainWindow):
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding
         )
+        self.api_key_field.setEchoMode(QLineEdit.Password)
         self.api_key_field.setPlaceholderText("Put Z.AI API key here...")
 
-        check_api_button = QPushButton("Check API-key")
-        check_api_button.setObjectName(f"sendButton")
-        check_api_button.setMinimumSize(120, 42)
-        check_api_button.setMaximumSize(120, 42)
-        check_api_button.setSizePolicy(
+        self.set_api_key()
+
+        self.check_api_button = QPushButton("Check API-key")
+        self.check_api_button.setObjectName(f"sendButton")
+        self.check_api_button.setMinimumSize(120, 42)
+        self.check_api_button.setMaximumSize(120, 42)
+        self.check_api_button.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding
         )
-        check_api_button.clicked.connect(lambda btn=check_api_button: self.add_text_to_result_output(f"Button: {button.text()}"))
+        self.check_api_button.clicked.connect(self.check_api_key)
 
         center_layout.addWidget(self.api_key_field)
-        center_layout.addWidget(check_api_button)
+        center_layout.addWidget(self.check_api_button)
 
         bottom_section = QWidget()
         bottom_section.setObjectName("bottomSection")
@@ -190,18 +194,36 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(f"Styles error: {e}")
     
+    def get_api_key_from_input_field(self):
+        return self.api_key_field.text()
+
+    def check_api_key(self):
+        text = self.get_api_key_from_input_field()
+        if text == "":
+            return
+        is_correct = self.controller.check_api_key()
+        if is_correct:
+            self.api_key_field.setEnabled(False)
+            self.check_api_button.setText("Key is correct")
+            self.check_api_button.setEnabled(False)
+            self.add_text_to_result_output("Your API-key is correct")
+        else:
+            self.add_text_to_result_output("Your API-key is incorrect! Please change it and press check button")
+
+    def set_api_key(self):
+        key = self.controller.get_api_key()
+        self.api_key_field.setText(key)
+
     def add_text_to_result_output(self, text):
         self.result_output.append(text)
-
-    # def on_button_click(self, button):
-    #     button_text = button.text()
-    #     self.add_text_to_result_output(f"Button: {button_text}")
     
     def on_extra_button_click(self):
         self.controller.stop_thread()
     
     def on_send_click(self):
         query = self.query_input.toPlainText()
+        if query == "":
+            return
         self.query_input.clear()
         self.controller.start_prompt_processing_in_thread(query)
 

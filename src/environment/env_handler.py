@@ -17,9 +17,10 @@ class EnvironmentHandler:
     
     def get_api_key_from_env(self):
         self.api_key = os.getenv(self.api_key_name)
-        self.is_api_key_available = self.api_key is not None
+        self.api_key = self.api_key if self.api_key is not None else ""
+        self.is_api_key_available = self.api_key != ""
 
-    def set_api_key_from_ui(self, key):
+    def set_api_key(self, key):
         set_key(self.dotenv_path, self.api_key_name, key)
         self.get_api_key_from_env()
 

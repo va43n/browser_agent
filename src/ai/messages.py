@@ -82,6 +82,8 @@ IMPORTANT:
 - DO NOT do same action with the same HTML tag!
 """
 
+    user_checking_api_prompt = "You are a api connection inspector. Just type only one symbol '1' as a response, if you receive this message."
+
     def __init__(self):
         self.messages_list = []
 
@@ -112,6 +114,10 @@ IMPORTANT:
 
     def get_messages(self):
         return self.messages_list
+
+    def get_checking_api_messages(self):
+        messages = [{"role": "user", "content": self.user_checking_api_prompt}]
+        return messages
 
     def __str__(self):
         str_messages = ""

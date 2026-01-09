@@ -8,7 +8,7 @@ class TaskDescriberAgent:
         self.model = "glm-4.6v-flash"
     
     def change_key(self, key):
-        pass
+        self.client = ZaiClient(api_key=key)
 
     def describe_task(self, messages):
         response = self.client.chat.completions.create(

@@ -1,17 +1,37 @@
+from .api_checker_agent import APICheckerAgent
 from .browser_scroller_agent import BrowserScrollerAgent
 from .messages import Messages
 from .task_describer_agent import TaskDescriberAgent
 
 class AgentHandler:
     def __init__(self, api_key):
-        self.task_describer = TaskDescriberAgent(api_key)
-        self.browser_scroller = BrowserScrollerAgent(api_key)
+        self.is_api_key_correct = False
+
+        self.api_checker = APICheckerAgent(api_key)
+        self.task_describer = None
+        self.browser_scroller = None
 
         self.m = Messages()
     
     def change_key(self, key):
-        self.task_describer.change_key(key)
-        self.browser_scroller.change_key(key)
+        if self.api_checker is not None:
+            self.api_checker.change_key(key)
+        if self.browser_scroller is not None:
+            self.browser_scroller.change_key(key)
+        if self.task_describer is not None:
+            self.task_describer.change_key(key)
+
+    def check_key(self, key):
+        if self.is_api_key_correct:
+            return True
+        self.api_checker.change_key(key)
+        is_key = self.api_checker.check_api_key(self.m.get_checking_api_messages())
+        
+        if is_key and (self.task_describer is None or self.browser_scroller is None):
+            self.task_describer = TaskDescriberAgent(key)
+            self.browser_scroller = BrowserScrollerAgent(key)
+        
+        return is_key
 
     def process_new_prompt(self, prompt, gui):
         self.m.prepare_for_getting_url_prompt(prompt)

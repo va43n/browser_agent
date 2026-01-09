@@ -12,7 +12,7 @@ class BrowserScrollerAgent:
         self.browser_handler = BrowserHandler()
     
     def change_key(self, key):
-        pass
+        self.client = ZaiClient(api_key=key)
 
     def open_browser(self, url):
         self.browser_handler.start_browser()
