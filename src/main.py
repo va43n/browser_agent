@@ -7,14 +7,22 @@ class Controller:
     def __init__(self):
         self.env = EnvironmentHandler()
         self.agent_handler = None
+
+        self.thread = None
+        self.is_thread_going = False
         
         self.gui = GUI(self)
         self.gui.start_app()
 
     def start_prompt_processing_in_thread(self, user_input):
+        self.is_thread_going = True
         self.thread = AgentProcessingThread(self, user_input)
-        # self.thread.progress.connect(self.update_progress)
         self.thread.start()
+
+    def stop_thread(self):
+        if self.is_thread_going:
+            self.thread.stop()
+            self.is_thread_going = False
 
     def send_prompt(self, user_input):
         if user_input == "":

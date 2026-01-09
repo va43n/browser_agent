@@ -20,5 +20,4 @@ class GUI:
         sys.exit(self.app.exec())
     
     def add_text_to_result_output(self, text):
-        print("OK")
         self.window.add_text_to_result_output(text)

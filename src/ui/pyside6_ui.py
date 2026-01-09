@@ -2,8 +2,8 @@ import os
 
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout,
                                QHBoxLayout, QGridLayout, QPushButton, QTextEdit,
-                               QSizePolicy, QStyle)
-from PySide6.QtCore import QSize, QTimer
+                               QSizePolicy, QStyle, QLineEdit)
+from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon, QCloseEvent
 
 class MainWindow(QMainWindow):
@@ -40,7 +40,35 @@ class MainWindow(QMainWindow):
         self.result_output.setMinimumHeight(256)
         
         top_layout.addWidget(self.result_output)
-        
+
+        center_section = QWidget()
+        center_section.setObjectName("centerSection")
+        center_section.setMinimumHeight(62)
+        center_layout = QHBoxLayout(center_section)
+        center_layout.setContentsMargins(2, 2, 12, 2)
+        center_layout.setSpacing(12)
+
+        self.api_key_field = QLineEdit()
+        self.api_key_field.setObjectName("apiKeyField")
+        self.api_key_field.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding
+        )
+        self.api_key_field.setPlaceholderText("Put Z.AI API key here...")
+
+        check_api_button = QPushButton("Check API-key")
+        check_api_button.setObjectName(f"sendButton")
+        check_api_button.setMinimumSize(120, 42)
+        check_api_button.setMaximumSize(120, 42)
+        check_api_button.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding
+        )
+        check_api_button.clicked.connect(lambda btn=check_api_button: self.add_text_to_result_output(f"Button: {button.text()}"))
+
+        center_layout.addWidget(self.api_key_field)
+        center_layout.addWidget(check_api_button)
+
         bottom_section = QWidget()
         bottom_section.setObjectName("bottomSection")
         bottom_section.setMinimumHeight(116)
@@ -83,7 +111,7 @@ class MainWindow(QMainWindow):
         self.send_button.setFixedSize(40, 40)
         self.send_button.setIcon(QIcon("ui/img/send.svg"))
         self.send_button.setIconSize(QSize(24, 24))
-        
+
         self.extra_button = QPushButton()
         self.extra_button.setObjectName("extraButton")
         self.extra_button.setToolTip("Secret")
@@ -133,7 +161,7 @@ class MainWindow(QMainWindow):
                     QSizePolicy.Policy.Expanding,
                     QSizePolicy.Policy.Expanding
                 )
-                button.clicked.connect(lambda btn=button: self.on_button_click(btn))
+                button.clicked.connect(lambda btn=button: self.add_text_to_result_output(f"Button: {button.text()}"))
                 buttons_grid.addWidget(button, row, col)
                 self.buttons.append(button)
         
@@ -143,8 +171,9 @@ class MainWindow(QMainWindow):
         bottom_layout.addWidget(left_column, 2)
         bottom_layout.addWidget(right_column, 1)
         
-        main_layout.addWidget(top_section, 4)
-        main_layout.addWidget(bottom_section, 1)
+        main_layout.addWidget(top_section, 8)
+        main_layout.addWidget(center_section, 1)
+        main_layout.addWidget(bottom_section, 2)
         
         self.load_styles("style/styles.css")
     
@@ -164,21 +193,20 @@ class MainWindow(QMainWindow):
     def add_text_to_result_output(self, text):
         self.result_output.append(text)
 
-    def on_button_click(self, button):
-        button_text = button.text()
-        self.add_text_to_result_output(f"Button: {button_text}")
+    # def on_button_click(self, button):
+    #     button_text = button.text()
+    #     self.add_text_to_result_output(f"Button: {button_text}")
     
     def on_extra_button_click(self):
-        self.add_text_to_result_output("Secret")
+        self.controller.stop_thread()
     
     def on_send_click(self):
         query = self.query_input.toPlainText()
-        # if query:
-        #     self.add_text_to_result_output(f"USER PROMPT: {query}")
-        #     self.query_input.clear()
+        self.query_input.clear()
         self.controller.start_prompt_processing_in_thread(query)
 
     def closeEvent(self, event: QCloseEvent):
         print("SHUTDOWN")
+        self.controller.stop_thread()
         
         event.accept()

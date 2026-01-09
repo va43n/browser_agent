@@ -35,6 +35,24 @@ QLabel {
     selection-color: white;
 }
 
+#centerSection {
+    background-color: white;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    /* border: 1px solid black; */
+}
+
+#apiKeyField {
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    color: #2d3748;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    selection-background-color: #9fb4cc;
+    selection-color: white;
+    /* border: 1px solid red; */
+}
+
 #bottomSection {
     background-color: transparent;
     padding: 0px;
@@ -122,37 +140,6 @@ QLabel {
     border-radius: 10px;
 }
 
-QPushButton[id^="button"] {
-    background-color: qlineargradient(
-        spread:pad, x1:0, y1:0, x2:1, y2:1,
-        stop:0 #667eea, stop:1 #764ba2
-    );
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: bold;
-    min-width: 120px;
-    min-height: 50px;
-    margin: 4px;
-}
-
-QPushButton[id^="button"]:hover {
-    background-color: qlineargradient(
-        spread:pad, x1:0, y1:0, x2:1, y2:1,
-        stop:0 #5a67d8, stop:1 #6b46c1
-    );
-    border: 2px solid #a78bfa;
-}
-
-QPushButton[id^="button"]:pressed {
-    background-color: qlineargradient(
-        spread:pad, x1:0, y1:0, x2:1, y2:1,
-        stop:0 #4c51bf, stop:1 #553c9a
-    );
-}
-
 QScrollBar:vertical {
     border: none;
     background-color: #f1f5f9;
@@ -169,4 +156,20 @@ QScrollBar::handle:vertical {
 
 QScrollBar::handle:vertical:hover {
     background-color: #a0aec0;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    border: none;
+    background: none;
+    color: none;
+}
+
+QScrollBar::add-line:vertical {
+      border: none;
+      background: none;
+}
+
+QScrollBar::sub-line:vertical {
+      border: none;
+      background: none;
 }
