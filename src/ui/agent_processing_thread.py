@@ -7,10 +7,7 @@ class AgentProcessingThread(QThread):
         self.controller = controller
     
     def run(self):
-        while not self.isInterruptionRequested():
-            self.controller.send_prompt(self.user_input)
-            if self.isInterruptionRequested():
-                break
+        self.controller.send_prompt(self.user_input)
         
     def stop(self):
         self.requestInterruption()

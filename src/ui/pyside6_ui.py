@@ -224,6 +224,7 @@ class MainWindow(QMainWindow):
         query = self.query_input.toPlainText()
         if query == "":
             return
+        self.add_text_to_result_output(f"Start working with prompt '{query}'")
         self.query_input.clear()
         self.controller.start_prompt_processing_in_thread(query)
 

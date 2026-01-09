@@ -37,7 +37,6 @@ class Controller:
             self.gui.add_text_to_result_output("Your API-key is incorrect! Please change it and press check button")
             return
 
-        self.gui.add_text_to_result_output(f"Your prompt: {user_input}")
         self.agent_handler.process_new_prompt(user_input, self.gui)
 
     def get_api_key(self):
@@ -47,6 +46,7 @@ class Controller:
     def check_api_key(self):
         if self.is_api_key_correct:
             return True
+        self.gui.add_text_to_result_output("Trying to check your API-key...")
         key = self.gui.get_api_key_from_input_field()
         if key == "":
             return False

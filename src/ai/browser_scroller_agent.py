@@ -33,20 +33,25 @@ class BrowserScrollerAgent:
         choice = response.choices[0]
 
         if not choice.finish_reason == "stop":
-            return False, {}, "Не удалось уложиться в заданную длину запроса"
+            gui.add_text_to_result_output("Can't answer - the token limit for this prompt has been reached.")
+            return False, {}, "Can't answer - the token limit for this prompt has been reached."
 
         is_success, json_message = self.get_json_from_ai_output(choice.message.content)
         if not is_success:
-            return False, {}, "Не удалось обработать запрос агента"
+            gui.add_text_to_result_output("Can't answer - something went wrong.")
+            return False, {}, "Can't answer - something went wrong."
 
         usage_info = response.usage
         print(f"Prompt tokens (input): {usage_info.prompt_tokens}")
         print(f"Completion tokens (output): {usage_info.completion_tokens}")
         print(f"Total tokens: {usage_info.total_tokens}")
 
-        gui.add_text_to_result_output(f"Going to do action: {json_message['description']}, {json_message['is_done']=}")
         if json_message['is_done'] != "YES":
+            gui.add_text_to_result_output(f"I think I know what to do next! Let's try this: '{json_message['description']}'")
             self.browser_handler.perform_action(json_message)
+            gui.add_text_to_result_output(f"Success!")
+        else:
+            gui.add_text_to_result_output(f"I think that's it! {json_message['description']}")
 
         return True, choice.message.content, "", json_message['is_done']
 
