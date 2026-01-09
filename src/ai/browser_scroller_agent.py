@@ -11,6 +11,9 @@ class BrowserScrollerAgent:
 
         self.browser_handler = BrowserHandler()
     
+    def change_key(self, key):
+        pass
+
     def open_browser(self, url):
         self.browser_handler.start_browser()
 
@@ -19,7 +22,7 @@ class BrowserScrollerAgent:
     def get_page_info(self):
         return self.browser_handler.get_page_info()
 
-    def do_next_browser_action(self, messages):
+    def do_next_browser_action(self, messages, gui):
         response = self.client.chat.completions.create(
             model="glm-4.6v-flash",
             messages=messages,
@@ -41,7 +44,7 @@ class BrowserScrollerAgent:
         print(f"Completion tokens (output): {usage_info.completion_tokens}")
         print(f"Total tokens: {usage_info.total_tokens}")
 
-        print(f"Going to do action: {json_message['description']}, {json_message['is_done']=}")
+        gui.add_text_to_result_output(f"Going to do action: {json_message['description']}, {json_message['is_done']=}")
         if json_message['is_done'] != "YES":
             self.browser_handler.perform_action(json_message)
 

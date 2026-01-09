@@ -22,7 +22,7 @@ QLabel {
 }
 
 #resultOutput {
-    border-image: url('ui/pic.png') 0 0 0 0  stretch stretch;
+    border-image: url('ui/background_robot.png') 0 0 0 0 stretch stretch;
     background-repeat: no-repeat;
     background-position: center;
     background-color: white;

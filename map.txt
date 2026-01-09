@@ -8,17 +8,18 @@ browser_agent
 │  │  │  └──browser.py
 │  │  ├──agent_handler.py
 │  │  ├──browser_scroller_agent.py
-│  │  ├──task_describer_agent.py
-│  │  └──agent.py
+│  │  ├──messages.py
+│  │  └──task_describer_agent.py
 │  ├──environment
 │  │  └──env_handler.py
 │  ├──ui
+│  │  ├──agent_processing_thread.py
+│  │  ├──background_robot.png
+│  │  ├──gui_manager.py
 │  │  ├──microphone.svg
-│  │  ├──pic.png
 │  │  ├──pyside6_ui.py
 │  │  ├──send.svg
 │  │  ├──styles.css
-│  │  ├──terminal_ui.py ?
 │  │  └──voice_handler.py ?
 │  ├──venv
 │  │  └──<...>

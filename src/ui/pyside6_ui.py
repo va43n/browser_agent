@@ -1,13 +1,15 @@
-import sys
 import os
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+
+from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout,
                                QHBoxLayout, QGridLayout, QPushButton, QTextEdit,
                                QSizePolicy, QStyle)
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QFont, QIcon
+from PySide6.QtCore import QSize, QTimer
+from PySide6.QtGui import QIcon, QCloseEvent
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, controller):
+        self.controller = controller
+
         super().__init__()
         self.setWindowTitle("Browser Agent")
         self.setGeometry(100, 100, 720, 640)
@@ -35,6 +37,7 @@ class MainWindow(QMainWindow):
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding
         )
+        self.result_output.setMinimumHeight(256)
         
         top_layout.addWidget(self.result_output)
         
@@ -170,21 +173,12 @@ class MainWindow(QMainWindow):
     
     def on_send_click(self):
         query = self.query_input.toPlainText()
-        if query:
-            self.add_text_to_result_output(f"USER PROMPT: {query}")
-            self.query_input.clear()
+        # if query:
+        #     self.add_text_to_result_output(f"USER PROMPT: {query}")
+        #     self.query_input.clear()
+        self.controller.start_prompt_processing_in_thread(query)
 
-class GUI:
-    def __init__(self):
-        self.app = QApplication(sys.argv)
-    
-        font = QFont("Segoe UI", 10)
-        self.app.setFont(font)
+    def closeEvent(self, event: QCloseEvent):
+        print("SHUTDOWN")
         
-        self.window = MainWindow()
-        self.window.show()
-        sys.exit(self.app.exec())
-    
-    def add_text_to_result_output(self, text):
-        print("OK")
-        self.window.add_text_to_result_output(text)
+        event.accept()
