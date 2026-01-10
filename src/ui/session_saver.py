@@ -34,7 +34,7 @@ class SessionSaver:
             # print("CANT")
             return
         self.session['session_number'] = self.session_counter
-        session_name = f"sessions/Session_{self.session_time}_{self.session_counter}.json"
+        session_name = f"Session_{self.session_time}_{self.session_counter}.json"
         with open(file=session_name, mode="w") as json_file:
             json.dump(self.session, json_file, indent=4)
 

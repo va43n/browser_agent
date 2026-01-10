@@ -33,8 +33,7 @@ browser_agent
 │  ├──.env
 │  ├──main.py
 │  ├──requirements.txt
-│  └──sessions
-│     └──<...>
+│  └──Session_...
 ├──.gitignore
 ├──map.txt
 ├──README.md

@@ -6,6 +6,10 @@ from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout,
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QIcon, QCloseEvent, QKeyEvent
 
+class PlainTextEdit(QTextEdit):
+    def insertFromMimeData(self, source):
+        self.insertPlainText(source.text())
+
 class MainWindow(QMainWindow):
     def __init__(self, controller, session):
         self.controller = controller
@@ -91,7 +95,7 @@ class MainWindow(QMainWindow):
         input_buttons_layout.setSpacing(0)
         input_buttons_layout.setContentsMargins(0, 0, 0, 0)
         
-        self.query_input = QTextEdit()
+        self.query_input = PlainTextEdit()
         self.query_input.setPlaceholderText("Write prompt there...")
         self.query_input.setObjectName("queryInput")
         self.query_input.setSizePolicy(
@@ -194,10 +198,11 @@ class MainWindow(QMainWindow):
     def add_text_to_result_output(self, text):
         current_time_string = self.session.append_message("assistant", text)
         self.result_output.append(f"[{current_time_string}] 🤖: {text}")
+        scrollbar = self.result_output.verticalScrollBar()
+        scrollbar.setValue(scrollbar.maximum())
     
     def on_save_button_click(self):
         print("SAVE")
-        # self.controller.stop_thread()
         self.session.save_session()
     
     def on_clear_button_click(self):
@@ -206,6 +211,11 @@ class MainWindow(QMainWindow):
     
     def on_send_click(self):
         print("SEND")
+        if self.controller.is_thread_going:
+            self.add_text_to_result_output("Trying to stop, please wait...")
+            self.controller.stop_thread()
+            return
+
         query = self.query_input.toPlainText()
         if query == "":
             return

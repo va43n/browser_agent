@@ -104,10 +104,14 @@ class Browser:
             if elem_text:
                 attrs['text'] = elem_text
 
-            for attr in ['name', 'id', 'placeholder', 'title', 'class', 'data-qa']:
+            for attr in ['name', 'id', 'placeholder', 'title', 'class']:
                 value = elem.get(attr)
                 if value:
                     attrs[attr] = value
+
+            for attr_name, attr_value in elem.attrs.items():
+                if attr_name.startswith('data-'):
+                    attrs[attr_name] = attr_value
 
             print(attrs)
             json_str = f"{i + 1}. " + json.dumps(attrs, ensure_ascii=False) + "\n"

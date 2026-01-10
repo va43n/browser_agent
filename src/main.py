@@ -18,9 +18,7 @@ class Controller:
 
     def start_prompt_processing_in_thread(self, user_input):
         self.gui.check_api_key_and_show_result()
-        # self.check_api_key()
         if not self.is_api_key_correct:
-            # self.gui.add_text_to_result_output("Your API-key is incorrect! Please change it and press check button")
             return
         self.is_thread_going = True
         self.thread = AgentProcessingThread(self, user_input)
@@ -31,8 +29,8 @@ class Controller:
             self.thread.stop()
             self.is_thread_going = False
 
-    def send_prompt(self, user_input):
-        self.agent_handler.process_new_prompt(user_input, self.gui)
+    def send_prompt(self, user_input, thread):
+        self.agent_handler.process_new_prompt(user_input, self.gui, thread)
         self.gui.set_initial_state_of_send_button()
 
     def get_api_key(self):

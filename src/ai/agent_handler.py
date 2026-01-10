@@ -33,13 +33,13 @@ class AgentHandler:
         
         return is_key
 
-    def process_new_prompt(self, prompt, gui):
+    def process_new_prompt(self, prompt, gui, thread):
         self.m.prepare_for_getting_url_prompt(prompt)
 
         gui.add_text_to_result_output("Trying to understand your prompt...")
         is_success, json_description, error_message = self.task_describer.describe_task(self.m.get_messages(), gui)
         if not is_success:
-            gui.add_text_to_result_output(error_message, json_description)
+            gui.add_text_to_result_output(error_message)
             return False
         if json_description['is_valid'] == "NO":
             gui.add_text_to_result_output("I'm sorry, but I think, that this prompt makes no sense. Please try again with a different prompt.")
@@ -51,16 +51,16 @@ class AgentHandler:
 
         self.browser_scroller.open_browser(json_description['url'])
         
-        self.perform_task(gui)
+        self.perform_task(gui, thread)
 
         return True
     
-    def perform_task(self, gui):
+    def perform_task(self, gui, thread):
         max_actions_for_one_task = 10
 
         is_complete = False
         action_index = 0
-        while not is_complete and action_index < max_actions_for_one_task:
+        while not is_complete and action_index < max_actions_for_one_task and thread.is_running:
             gui.add_text_to_result_output("Right now I am looking for something useful on this page")
             is_success, page_info = self.browser_scroller.get_page_info()
             if not is_success:

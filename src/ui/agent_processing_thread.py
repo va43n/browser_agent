@@ -5,11 +5,10 @@ class AgentProcessingThread(QThread):
         super().__init__()
         self.user_input = user_input
         self.controller = controller
+        self.is_running = True
     
     def run(self):
-        self.controller.send_prompt(self.user_input)
+        self.controller.send_prompt(self.user_input, self)
         
     def stop(self):
-        self.requestInterruption()
-        self.quit()
-        self.wait(2000)
+        self.is_running = False
