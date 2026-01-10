@@ -1,14 +1,15 @@
 import os
 
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout,
-                               QHBoxLayout, QGridLayout, QPushButton, QTextEdit,
+                               QHBoxLayout, QPushButton, QTextEdit,
                                QSizePolicy, QStyle, QLineEdit)
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QIcon, QCloseEvent
+from PySide6.QtCore import QSize, Qt
+from PySide6.QtGui import QIcon, QCloseEvent, QKeyEvent
 
 class MainWindow(QMainWindow):
-    def __init__(self, controller):
+    def __init__(self, controller, session):
         self.controller = controller
+        self.session = session
 
         super().__init__()
         self.setWindowTitle("Browser Agent")
@@ -60,23 +61,21 @@ class MainWindow(QMainWindow):
 
         self.set_api_key()
 
-        self.check_api_button = QPushButton("Check API-key")
-        self.check_api_button.setObjectName(f"sendButton")
-        self.check_api_button.setMinimumSize(120, 42)
-        self.check_api_button.setMaximumSize(120, 42)
-        self.check_api_button.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.Expanding
-        )
+        self.check_api_button = QPushButton()
+        self.check_api_button.setObjectName("checkButton")
+        self.check_api_button.setToolTip("Check API-key")
+        self.check_api_button.setFixedSize(40, 40)
         self.check_api_button.clicked.connect(self.check_api_key)
+        self.check_api_button.setIcon(QIcon("ui/img/question_mark.svg"))
+        self.check_api_button.setIconSize(QSize(24, 24))
 
         center_layout.addWidget(self.api_key_field)
         center_layout.addWidget(self.check_api_button)
 
         bottom_section = QWidget()
         bottom_section.setObjectName("bottomSection")
-        bottom_section.setMinimumHeight(116)
-        bottom_section.setMaximumHeight(116)
+        bottom_section.setMinimumHeight(68)
+        bottom_section.setMaximumHeight(68)
         bottom_layout = QHBoxLayout(bottom_section)
         bottom_layout.setSpacing(12)
         bottom_layout.setContentsMargins(0, 0, 0, 0)
@@ -101,83 +100,51 @@ class MainWindow(QMainWindow):
         )
         self.query_input.setMinimumWidth(200)
         
-        buttons_vertical_container = QWidget()
-        buttons_vertical_container.setObjectName("buttonsVerticalContainer")
-        buttons_vertical_container.setMinimumWidth(48)
-        buttons_vertical_layout = QVBoxLayout(buttons_vertical_container)
-        buttons_vertical_layout.setSpacing(8)
-        buttons_vertical_layout.setContentsMargins(12, 12, 12, 12)
+        buttons_horizontal_container = QWidget()
+        buttons_horizontal_container.setObjectName("buttonsHorizontalContainer")
+        buttons_horizontal_container.setMinimumWidth(160)
+        buttons_horizontal_container.setMaximumWidth(160)
+        buttons_horizontal_layout = QHBoxLayout(buttons_horizontal_container)
+        buttons_horizontal_layout.setSpacing(8)
+        buttons_horizontal_layout.setContentsMargins(12, 12, 12, 12)
         
         self.send_button = QPushButton()
         self.send_button.setObjectName("sendButton")
-        self.send_button.setToolTip("Send prompt")
         self.send_button.clicked.connect(self.on_send_click)
         self.send_button.setFixedSize(40, 40)
-        self.send_button.setIcon(QIcon("ui/img/send.svg"))
-        self.send_button.setIconSize(QSize(24, 24))
+        self.set_initial_state_of_send_button()
 
-        self.extra_button = QPushButton()
-        self.extra_button.setObjectName("extraButton")
-        self.extra_button.setToolTip("Secret")
-        self.extra_button.clicked.connect(self.on_extra_button_click)
-        self.extra_button.setFixedSize(40, 40)
-        self.extra_button.setIcon(QIcon("ui/img/microphone.svg"))
-        self.extra_button.setIconSize(QSize(24, 24))
+        self.save_button = QPushButton()
+        self.save_button.setObjectName("saveButton")
+        self.save_button.setToolTip("Save session")
+        self.save_button.clicked.connect(self.on_save_button_click)
+        self.save_button.setFixedSize(40, 40)
+        self.save_button.setIcon(QIcon("ui/img/save.svg"))
+        self.save_button.setIconSize(QSize(24, 24))
+
+        self.clear_button = QPushButton()
+        self.clear_button.setObjectName("clearButton")
+        self.clear_button.setToolTip("Clear agent output")
+        self.clear_button.clicked.connect(self.on_clear_button_click)
+        self.clear_button.setFixedSize(40, 40)
+        self.clear_button.setIcon(QIcon("ui/img/bin.svg"))
+        self.clear_button.setIconSize(QSize(24, 24))
         
-        buttons_vertical_layout.addWidget(self.send_button)
-        buttons_vertical_layout.addWidget(self.extra_button)
-        buttons_vertical_layout.addStretch()
+        buttons_horizontal_layout.addWidget(self.send_button)
+        buttons_horizontal_layout.addWidget(self.save_button)
+        buttons_horizontal_layout.addWidget(self.clear_button)
+        buttons_horizontal_layout.addStretch()
         
         input_buttons_layout.addWidget(self.query_input)
-        input_buttons_layout.addWidget(buttons_vertical_container)
+        input_buttons_layout.addWidget(buttons_horizontal_container)
         
         left_column_layout.addWidget(input_buttons_container)
         
-        right_column = QWidget()
-        right_column.setObjectName("rightColumn")
-        right_column.setSizePolicy(
-            QSizePolicy.Policy.Fixed,
-            QSizePolicy.Policy.Fixed
-        )
-        right_column_layout = QVBoxLayout(right_column)
-        right_column_layout.setSpacing(0)
-        right_column_layout.setContentsMargins(0, 0, 0, 0)
-        
-        buttons_container = QWidget()
-        buttons_container.setObjectName("buttonsGridContainer")
-        buttons_grid = QGridLayout(buttons_container)
-        buttons_grid.setSpacing(8)
-        buttons_grid.setContentsMargins(12, 12, 12, 12)
-        
-        button_texts = [
-            ["Clear", "Stop"],
-            ["Save", "Secret"]
-        ]
-        
-        self.buttons = []
-        for row in range(2):
-            for col in range(2):
-                button = QPushButton(button_texts[row][col])
-                button.setObjectName(f"sendButton")
-                button.setMinimumSize(120, 42)
-                button.setMaximumSize(120, 42)
-                button.setSizePolicy(
-                    QSizePolicy.Policy.Expanding,
-                    QSizePolicy.Policy.Expanding
-                )
-                button.clicked.connect(lambda btn=button: self.add_text_to_result_output(f"Button: {button.text()}"))
-                buttons_grid.addWidget(button, row, col)
-                self.buttons.append(button)
-        
-        right_column_layout.addWidget(buttons_container)
-        right_column_layout.addStretch()
-        
-        bottom_layout.addWidget(left_column, 2)
-        bottom_layout.addWidget(right_column, 1)
+        bottom_layout.addWidget(left_column, 1)
         
         main_layout.addWidget(top_section, 8)
         main_layout.addWidget(center_section, 1)
-        main_layout.addWidget(bottom_section, 2)
+        main_layout.addWidget(bottom_section, 1)
         
         self.load_styles("style/styles.css")
     
@@ -201,11 +168,21 @@ class MainWindow(QMainWindow):
         text = self.get_api_key_from_input_field()
         if text == "":
             return
+        
+        self.add_text_to_result_output("Trying to check your API-key...")
         is_correct = self.controller.check_api_key()
         if is_correct:
             self.api_key_field.setEnabled(False)
-            self.check_api_button.setText("Key is correct")
+
+            self.check_api_button.setToolTip("API-key is correct")
+            self.check_api_button.setObjectName("sendButton")
+            self.check_api_button.style().unpolish(self.check_api_button)
+            self.check_api_button.style().polish(self.check_api_button)
+            self.check_api_button.update()
+            self.check_api_button.setIcon(QIcon("ui/img/check.svg"))
+            self.check_api_button.setIconSize(QSize(24, 24))
             self.check_api_button.setEnabled(False)
+
             self.add_text_to_result_output("Your API-key is correct")
         else:
             self.add_text_to_result_output("Your API-key is incorrect! Please change it and press check button")
@@ -215,18 +192,45 @@ class MainWindow(QMainWindow):
         self.api_key_field.setText(key)
 
     def add_text_to_result_output(self, text):
-        self.result_output.append(text)
+        current_time_string = self.session.append_message("assistant", text)
+        self.result_output.append(f"[{current_time_string}] 🤖: {text}")
     
-    def on_extra_button_click(self):
-        self.controller.stop_thread()
+    def on_save_button_click(self):
+        print("SAVE")
+        # self.controller.stop_thread()
+        self.session.save_session()
+    
+    def on_clear_button_click(self):
+        self.result_output.clear()
+        self.session.clear_session()
     
     def on_send_click(self):
+        print("SEND")
         query = self.query_input.toPlainText()
         if query == "":
             return
+        
+        self.session.create_prompt()
+        self.session.append_message("user", query)
+
+        self.send_button.setIcon(QIcon("ui/img/stop.svg"))
+        self.send_button.setIconSize(QSize(24, 24))
+        self.send_button.setToolTip("Stop")
+        
         self.add_text_to_result_output(f"Start working with prompt '{query}'")
         self.query_input.clear()
         self.controller.start_prompt_processing_in_thread(query)
+
+    def set_initial_state_of_send_button(self):
+        self.send_button.setIcon(QIcon("ui/img/send.svg"))
+        self.send_button.setIconSize(QSize(24, 24))
+        self.send_button.setToolTip("Send prompt")
+
+    def keyPressEvent(self, event: QKeyEvent):
+        if event.key() == Qt.Key.Key_Return and not event.modifiers():
+            self.on_send_click()
+        else:
+            super().keyPressEvent(event)
 
     def closeEvent(self, event: QCloseEvent):
         print("SHUTDOWN")

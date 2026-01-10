@@ -10,7 +10,7 @@ class TaskDescriberAgent:
     def change_key(self, key):
         self.client = ZaiClient(api_key=key)
 
-    def describe_task(self, messages):
+    def describe_task(self, messages, gui):
         response = self.client.chat.completions.create(
             model="glm-4.6v-flash",
             messages=messages,
@@ -20,11 +20,13 @@ class TaskDescriberAgent:
         choice = response.choices[0]
 
         if not choice.finish_reason == "stop":
-            return False, choice.message.content, "Не удалось уложиться в заданную длину запроса"
+            gui.add_text_to_result_output("Can't answer - the token limit for this prompt has been reached.")
+            return False, {}, "Can't answer - the token limit for this prompt has been reached."
 
         is_success, json_message = self.get_json_from_ai_output(choice.message.content)
         if not is_success:
-            return False, choice.message.content, "Не удалось обработать запрос агента"
+            gui.add_text_to_result_output("Can't answer - something went wrong.")
+            return False, {}, "Can't answer - something went wrong."
 
         usage_info = response.usage
         print(f"Prompt tokens (input): {usage_info.prompt_tokens}")

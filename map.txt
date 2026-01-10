@@ -7,6 +7,7 @@ browser_agent
 │  │  │  ├──browser_handler.py
 │  │  │  └──browser.py
 │  │  ├──agent_handler.py
+│  │  ├──api_checker_agent.py
 │  │  ├──browser_scroller_agent.py
 │  │  ├──messages.py
 │  │  └──task_describer_agent.py
@@ -15,20 +16,26 @@ browser_agent
 │  ├──ui
 │  │  ├──img
 │  │  │  ├──background_robot.png
-│  │  │  ├──microphone.svg
-│  │  │  └──send.svg
+│  │  │  ├──bin.svg
+│  │  │  ├──check.svg
+│  │  │  ├──question_mark.svg
+│  │  │  ├──save.svg
+│  │  │  ├──send.svg
+│  │  │  └──stop.svg
 │  │  ├──style
 │  │  │  └──styles.css
 │  │  ├──agent_processing_thread.py
 │  │  ├──gui_manager.py
 │  │  ├──pyside6_ui.py
-│  │  └──voice_handler.py ?
+│  │  └──session_saver.py
 │  ├──venv
 │  │  └──<...>
 │  ├──.env
+│  ├──main.py
 │  ├──requirements.txt
-│  └──main.py
+│  └──sessions
+│     └──<...>
 ├──.gitignore
 ├──map.txt
 ├──README.md
-└──task.txt ?
+└──README_RU.md ?

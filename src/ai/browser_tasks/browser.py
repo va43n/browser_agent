@@ -81,9 +81,9 @@ class Browser:
         title = self.page.title()
         url = self.page.url
 
-        print(f"Страница загружена: {title}")
+        print(f"Page loaded: {title}")
         print(f"URL: {url}")
-        print(f"Длина HTML: {len(html_content)} символов")
+        print(f"HTML length: {len(html_content)} symbols")
 
         result = self.extract_useful_elements(title, url, html_content)
         

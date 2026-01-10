@@ -37,7 +37,7 @@ class AgentHandler:
         self.m.prepare_for_getting_url_prompt(prompt)
 
         gui.add_text_to_result_output("Trying to understand your prompt...")
-        is_success, json_description, error_message = self.task_describer.describe_task(self.m.get_messages())
+        is_success, json_description, error_message = self.task_describer.describe_task(self.m.get_messages(), gui)
         if not is_success:
             gui.add_text_to_result_output(error_message, json_description)
             return False
