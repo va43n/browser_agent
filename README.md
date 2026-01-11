@@ -74,7 +74,7 @@ python main.py
     "session_number": [session number]
     "start_time": "HH:MM:SS"
 }
-``
+```
 9. Each session is described by its start time, session number, and a set of "prompts" consisting of lists of responses to user requests. The session is saved in the file "Session_[start_time]_[session_number].json".  
 10. When a valid user request is processed, the Chromium browser will be opened, where the AI ​​agent will then attempt to complete the task. A description of each action performed will appear in the top field.  
 11. If you click the green button while the request is executing, the AI ​​agent will stop executing the user request shortly.
