@@ -92,7 +92,7 @@ class Browser:
 
         elements_string = f"[{url}]\n[{title}]\n"
         i = 0
-        elements_length = 100
+        elements_length = 50
 
         for elem in soup.find_all(['input', 'button', 'a']):
             attrs = {}
