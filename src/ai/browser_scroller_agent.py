@@ -26,8 +26,8 @@ class BrowserScrollerAgent:
         response = self.client.chat.completions.create(
             model="glm-4.6v-flash",
             messages=messages,
-            max_tokens=10000,
-            temperature=0
+            max_tokens=20000,
+            temperature=0.1
         )
 
         choice = response.choices[0]

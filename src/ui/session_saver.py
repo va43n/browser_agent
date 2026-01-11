@@ -35,7 +35,7 @@ class SessionSaver:
             return
         self.session['session_number'] = self.session_counter
         session_name = f"Session_{self.session_time}_{self.session_counter}.json"
-        with open(file=session_name, mode="w") as json_file:
-            json.dump(self.session, json_file, indent=4)
+        with open(file=session_name, mode="w", encoding='utf-8') as json_file:
+            json.dump(self.session, json_file, ensure_ascii=False, indent=4)
 
         self.session_counter += 1

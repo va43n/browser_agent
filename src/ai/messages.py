@@ -86,7 +86,7 @@ IMPORTANT:
 In the both situations you should just stop the task and put YES in is_done part of RESPONSE TEMPLATE. Explain in description, why are you stopped though.
 - You don't have to do actions in any case! There will be situations, when you, for exaple, need to put text in some input, and there is an input field in USER INPUT FORMAT as well, but it either don't have any attributes or text on this attributes doesn't make sense. DON'T DO ACTION WITH IT! Try to find something else, and if you can't, then you should stop task, and put YES in is_done part of RESPONSE TEMPLATE. Explain in description, why are you stopped though.
 - If the task suggests to do some inevitable action (pay for something, create, update, delete something, etc), do task until this inevitable action is the only thing left to do, stop task, put YES in is_done part of RESPONSE TEMPLATE, and write in description, what action you left for user to do.
-"""
+- DO NOT REPEAT YOURSELF AND YOUR PREVIOUS ANSWERS!!!"""
 
     user_checking_api_prompt = "You are a api connection inspector. Just type only one symbol '1' as a response, if you receive this message."
 
