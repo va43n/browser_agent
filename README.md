@@ -58,21 +58,21 @@ python main.py
 8. Clicking the blue button will save the current session as a JSON report. A session might look like this:
 ```json
 {
-"prompts": [
-[
-["role": "user", "content": "[prompt...]"]
-["role": "assistant", "content": "[result...]"]
-...
-]
-[
-["role": "user", "content": "[second prompt...]"]
-["role": "assistant", "content": "[result...]"]
-...
-]
-...
-],
-"session_number": [session number]
-"start_time": "HH:MM:SS"
+    "prompts": [
+        [
+            ["role": "user", "content": "[prompt...]"]
+            ["role": "assistant", "content": "[result...]"]
+            ...
+        ]
+        [
+            ["role": "user", "content": "[second prompt...]"]
+            ["role": "assistant", "content": "[result...]"]
+            ...
+        ]
+        ...
+    ],
+    "session_number": [session number]
+    "start_time": "HH:MM:SS"
 }
 ``
 9. Each session is described by its start time, session number, and a set of "prompts" consisting of lists of responses to user requests. The session is saved in the file "Session_[start_time]_[session_number].json".  
