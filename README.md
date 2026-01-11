@@ -1,11 +1,11 @@
 # browser_agent
 
-[Версия на русском языке доступна здесь](README_RUS.md)
-A browser automation app using an AI agent.
-[Installation](#installation)
-[Run](#run)
-[Documentation](#documentation)
-[Information](#information)
+[Версия на русском языке доступна здесь](README_RUS.md)  
+A browser automation app using an AI agent.  
+[Installation](#installation)  
+[Run](#run)  
+[Documentation](#documentation)  
+[Information](#information)  
 
 ## Installation
 After cloning the repository, you need to:  
